@@ -1,5 +1,6 @@
 package com.example.glimtalertsbot.controller
 
+import com.example.glimtalertsbot.model.MatchDto
 import com.example.glimtalertsbot.service.MatchService
 import com.example.glimtalertsbot.service.MessengerService
 import com.example.glimtalertsbot.service.SubscriptionService
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.client.HttpServerErrorException
 
 @RestController
 @RequestMapping("/webhook")
@@ -45,7 +47,7 @@ class MessengerController(
         if (senderId != null && text != null) {
             when (text.lowercase()) {
                 "neste" -> {
-                    val match = matchService.getNextMatch()
+                    val match = getNextMatchWithRetries(senderId)
                     val reply = match?.toString() ?: "⚽ Finner ingen kamper i nærmeste fremtid 🤷‍♀️"
                     messengerService.sendMessage(senderId, reply)
                 }
@@ -81,5 +83,26 @@ class MessengerController(
                 }
             }
         }
+    }
+
+    fun getNextMatchWithRetries(senderId: String, maxRetries: Int = 3): MatchDto? {
+        val delaySeconds = listOf(5L, 10L, 20L)
+
+        for (attempt in 0 until maxRetries) {
+            try {
+                return matchService.getNextMatch()
+            } catch (e: Exception) {
+                if (e is HttpServerErrorException && e.statusCode.value() == 502) {
+                    messengerService.sendMessage(senderId, "⏳ Roboten som henter kamper sover, vent litt...")
+                    Thread.sleep(delaySeconds.getOrElse(attempt) { 20 } * 1000)
+                } else {
+                    println("❌ Klarte ikke hente kampen: ${e.message}")
+                    break
+                }
+            }
+        }
+
+        messengerService.sendMessage(senderId, "⚠️ Klarte ikke hente kampdata. Prøv igjen om litt.")
+        return null
     }
 }
