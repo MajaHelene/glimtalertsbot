@@ -76,8 +76,7 @@ class MessengerController(
                     messengerService.sendMessage(
                         senderId,
                         "❓ Bip bop, jeg skjønner ikke hva du mener. Skriv 'neste' for informasjon om neste Glimt-kamp, " +
-                                "'alle' for alle kommende kamper, 'abboner' for å abonnere på kampvarsler, " +
-                                "eller 'stopp' for å avslutte abonnementet."
+                                " 'abonner' for å abonnere på kampvarsler, " + "eller 'stopp' for å avslutte abonnementet."
                     )
                 }
             }
