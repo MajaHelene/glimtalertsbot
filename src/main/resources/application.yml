@@ -15,5 +15,5 @@ spring:
       ddl-auto: update
     show-sql: true
 messenger:
-  verify-token: babyhauge
-  page-token: EACJSLXkhNScBO84ooSaMmZBtpRrqWzvGfPfxCwnHwf2rDkDwtAqWaz5I6aLwSw0aQJhbTEQOH5x0QOZBfcZC9uzpr8ZA7DEKDY1EPujfW4g3ZBclfxmTyR6C75tJXEErDYAHGpWE3QWdZA1KYSEejjO8zLwC3dHjIr5O51M5BIhxSKWcBvKN4nsZAVVHOAmZCBmuxoAZD
+  verify-token: ${MESSENGER_VERIFY_TOKEN}
+  page-token: ${MESSENGER_PAGE_TOKEN}

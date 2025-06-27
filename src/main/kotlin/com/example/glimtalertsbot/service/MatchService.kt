@@ -5,14 +5,15 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.example.glimtalertsbot.model.MatchDto
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
 class MatchService(
-    private val restTemplate: RestTemplate
+    private val restTemplate: RestTemplate,
+    @Value("\${apiBaseUrl}") private val apiBaseUrl: String
 ) {
-    private val apiBaseUrl = "http://localhost:8081"
 
     private val objectMapper = jacksonObjectMapper()
         .registerModule(JavaTimeModule())
