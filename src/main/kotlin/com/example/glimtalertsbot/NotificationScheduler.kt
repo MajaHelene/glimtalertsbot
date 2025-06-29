@@ -14,7 +14,7 @@ class NotificationScheduler(
     private val messengerService: MessengerService
 ) {
 
-    @Scheduled(cron = "0 0 10 * * *", zone = "Europe/Oslo") // Every day at 10:00 Oslo time
+    @Scheduled(cron = "0 15 10 * * *", zone = "Europe/Oslo") // Every day at 10:00 Oslo time
     fun notifySubscribersIfMatchToday() {
         val today = LocalDate.now()
         val match = matchService.getNextMatch()
